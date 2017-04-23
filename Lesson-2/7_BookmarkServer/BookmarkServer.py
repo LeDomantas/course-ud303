@@ -92,6 +92,7 @@ class Shortener(http.server.BaseHTTPRequestHandler):
                 # 2. Send a 303 redirect to the long URI in memory[name].
                	self.send_response(303)
                	self.send_header('Location', memory[name])
+               	self.end_headers()
             else:
                 # We don't know that name! Send a 404 error.
                 self.send_response(404)
