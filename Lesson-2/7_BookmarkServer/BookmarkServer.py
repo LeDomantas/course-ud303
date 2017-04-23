@@ -75,11 +75,11 @@ def CheckURI(uri, timeout=5):
     try:
         requestData = requests.get(uri)
         if (requestData.status_code == 200):
-            return true
+            return True
         else:
-            return false
+            return False
     except:
-        return false
+        return False
     
 class Shortener(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
