@@ -19,7 +19,7 @@ class HelloHandler(BaseHTTPRequestHandler):
         # Now, write the response body.
         self.wfile.write("Hello, HTTP!\n".encode())
 
-if __name__ == '__main__':
+if __name__ == '__main__':		 # Will run when this module is run as a Python program, instead of importing
     server_address = ('', 8000)  # Serve on all addresses, port 8000.
     httpd = HTTPServer(server_address, HelloHandler)
     httpd.serve_forever()
