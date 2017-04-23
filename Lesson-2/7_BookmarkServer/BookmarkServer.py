@@ -121,15 +121,17 @@ class Shortener(http.server.BaseHTTPRequestHandler):
             memory[shortname] = longuri
 
             # 3. Serve a redirect to the root page (the form).
-            #    Delete the following line.
-            raise NotImplementedError("Step 3 isn't written yet!")
+            self.send_response(303)
+        	self.send_header('Location', '/')
+        	self.end_headers()
         else:
             # Didn't successfully fetch the long URI.
 
             # 4. Send a 404 error with a useful message.
-            #    Delete the following line.
-            raise NotImplementedError("Step 4 isn't written yet!")
-
+            self.send_response(404)
+        	self.send_header('Content-type', 'text/plain; charset=utf-8')
+        	self.end_headers()
+        	self.wfile.write("I don't know '{}'.".format(name).encode())
 if __name__ == '__main__':
     server_address = ('', 8000)
     httpd = http.server.HTTPServer(server_address, Shortener)
