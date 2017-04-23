@@ -122,16 +122,16 @@ class Shortener(http.server.BaseHTTPRequestHandler):
 
             # 3. Serve a redirect to the root page (the form).
             self.send_response(303)
-        	self.send_header('Location', '/')
-        	self.end_headers()
+            self.send_header('Location', '/')
+            self.end_headers()
         else:
             # Didn't successfully fetch the long URI.
 
             # 4. Send a 404 error with a useful message.
             self.send_response(404)
-        	self.send_header('Content-type', 'text/plain; charset=utf-8')
-        	self.end_headers()
-        	self.wfile.write("I don't know '{}'.".format(name).encode())
+            self.send_header('Content-type', 'text/plain; charset=utf-8')
+            self.end_headers()
+            self.wfile.write("I don't know '{}'.".format(name).encode())
 if __name__ == '__main__':
     server_address = ('', 8000)
     httpd = http.server.HTTPServer(server_address, Shortener)
