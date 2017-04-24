@@ -19,19 +19,6 @@
 #
 # Your job in this exercise is to finish the server code.
 #
-# Here are the steps you need to complete:
-#
-# 1. Write the CheckURI function, which takes a URI and returns True if a
-#    request to that URI returns a 200 OK, and False otherwise.
-#
-# 2. Write the code inside do_GET that sends a 303 redirect to a known name.
-#
-# 3. Write the code inside do_POST that sends a 303 redirect to the form
-#    after saving a newly submitted URI.
-#
-# 4. Write the code inside do_POST that sends a 404 error if a URI is not
-#    successfully checked (i.e. if CheckURI returns false).
-#
 # In each step, you'll need to delete a line of code that raises the
 # NotImplementedError exception.  These are there as placeholders in the
 # starter code.
@@ -71,7 +58,6 @@ def CheckURI(uri, timeout=5):
     False if that GET request returns any other response, or doesn't return
     (i.e. times out).
     '''
-    # 1. Write this function.
     try:
         requestData = requests.get(uri)
         if (requestData.status_code == 200):
@@ -89,7 +75,7 @@ class Shortener(http.server.BaseHTTPRequestHandler):
 
         if name:
             if name in memory:
-                # 2. Send a 303 redirect to the long URI in memory[name].
+                # Send a 303 redirect to the long URI in memory[name].
                	self.send_response(303)
                	self.send_header('Location', memory[name])
                	self.end_headers()
@@ -121,18 +107,39 @@ class Shortener(http.server.BaseHTTPRequestHandler):
             # This URI is good!  Remember it under the specified name.
             memory[shortname] = longuri
 
-            # 3. Serve a redirect to the root page (the form).
+            # Serve a redirect to the root page (the form).
             self.send_response(303)
             self.send_header('Location', '/')
             self.end_headers()
         else:
             # Didn't successfully fetch the long URI.
 
-            # 4. Send a 404 error with a useful message.
+            # Send a 404 error with a useful message.
             self.send_response(404)
             self.send_header('Content-type', 'text/plain; charset=utf-8')
             self.end_headers()
             self.wfile.write("Invalid Long URI".encode())
+
+    def do_HEAD(self):
+    	# A HEAD request will either be for / (the root path) or for /some-name.
+        # Strip off the / and we have either empty string or a name.
+        name = unquote(self.path[1:])
+
+        if name:
+            if name in memory:
+                # Send a 303 redirect to the long URI in memory[name].
+               	self.send_response(303)
+               	self.send_header('Location', memory[name])
+               	self.end_headers()
+            else:
+                # We don't know that name! Send a 404 error.
+                self.send_response(404)
+                self.end_headers()
+        else:
+            # Root path. Send 200.
+            self.send_response(200)
+            self.end_headers()
+
 if __name__ == '__main__':
     server_address = ('', 8000)
     httpd = http.server.HTTPServer(server_address, Shortener)
