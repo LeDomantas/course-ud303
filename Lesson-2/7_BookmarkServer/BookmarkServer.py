@@ -4,6 +4,12 @@
 # between short names and long URIs, checking that each new URI added to the
 # mapping actually works (i.e. returns a 200 OK).
 #
+# Code that both accepts requests as a web server and makes requests as a 
+# web client. It's a server that serves up and HTML form via GET request
+# then accepts that form's subbmission via POST request. It checks web 
+# addresses using the requests module to make sure they work and it uses
+# the POST/REDIRECT/GET design
+#
 # This server is intended to serve three kinds of requests:
 #
 #   * A GET request to the / (root) path.  The server returns a form allowing
@@ -84,7 +90,7 @@ def CheckURI(uri, timeout=5):
 class Shortener(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
         # A GET request will either be for / (the root path) or for /some-name.
-        # Strip off the / and we have either empty string or a name.
+        # Replace %xx escapes by their single-character equivalent and strip off the /
         name = unquote(self.path[1:])
 
         if name:
