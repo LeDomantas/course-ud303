@@ -132,7 +132,7 @@ class Shortener(http.server.BaseHTTPRequestHandler):
             self.send_response(404)
             self.send_header('Content-type', 'text/plain; charset=utf-8')
             self.end_headers()
-            self.wfile.write("I don't know '{}'.".format(name).encode())
+            self.wfile.write("Invalid Long URI".encode())
 if __name__ == '__main__':
     server_address = ('', 8000)
     httpd = http.server.HTTPServer(server_address, Shortener)
